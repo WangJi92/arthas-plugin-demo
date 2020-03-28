@@ -1,0 +1,3 @@
+org.springframework.boot.env.EnvironmentPostProcessor=\
+  com.wangji92.arthas.plugin.demo.common.environment.CustomFirstEnvironmentPostProcessor,\
+  com.wangji92.arthas.plugin.demo.common.environment.CustomLastEnvironmentPostProcessor
