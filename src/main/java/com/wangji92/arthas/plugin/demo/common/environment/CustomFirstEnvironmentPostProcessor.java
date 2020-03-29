@@ -11,7 +11,7 @@ import java.io.IOException;
 import java.util.Properties;
 
 /**
- * 环境变量优先级 比如nacos 中获取、配置中心获取 等等途径 如何排除优先级？
+ * 环境变量优先级 比如nacos 中获取、配置中心获取 等等途径 如何排查优先级？
  * @author 汪小哥
  * @date 28-03-2020
  */

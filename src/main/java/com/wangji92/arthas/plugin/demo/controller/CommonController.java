@@ -69,6 +69,7 @@ public class CommonController {
     /**
      * 排查异常场景
      * trace com.wangji92.arthas.plugin.demo.controller.CommonController traceException -n 5
+     * watch com.wangji92.arthas.plugin.demo.controller.CommonController traceException '{params,returnObj,throwExp}' -n 5 -x 3
      *
      * @return
      */
