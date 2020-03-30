@@ -8,7 +8,8 @@
 ## 视频地址
 **本文视频介绍大约 1hour,最好结合视频+文档学习+实践** 
 
-优酷地址：https://v.youku.com/v_show/id_XNDYxMDUxMzYxNg==.html
+* 优酷地址：https://v.youku.com/v_show/id_XNDYxMDUxMzYxNg==.html
+* 哔哩哔哩：https://www.bilibili.com/video/BV1K7411Q7mW/
 
 ## 插件
 * 插件下载地址： https://plugins.jetbrains.com/plugin/13581-arthas-idea
