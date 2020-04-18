@@ -21,8 +21,8 @@ public class LoggerDemo {
     public void sample() {
         log.trace("....trace");
         log.debug("......debug");
-        log.warn("........warn");
-        log.info("..........info");
+        log.warn("........info");
+        log.info("..........warn");
         log.error("............error");
     }
 }
