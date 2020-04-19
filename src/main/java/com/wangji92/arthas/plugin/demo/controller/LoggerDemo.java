@@ -22,7 +22,7 @@ public class LoggerDemo {
         log.trace("....trace");
         log.debug("......debug");
         log.warn("........info");
-        log.info("..........warn");
+        log.info("..........warn ");
         log.error("............error");
     }
 }
