@@ -51,11 +51,25 @@ public class StaticTest {
      * 备注插件不支持 ，需要记住小知识点
      * <p>
      * ognl  -x  3  '@com.wangji92.arthas.plugin.demo.controller.StaticTest@invokeClass(@com.wangji92.arthas.plugin.demo.controller.StaticTest@class)' -c 482503f0
+     * ognl  -x  3  '@com.wangji92.arthas.plugin.demo.controller.StaticTest@invokeClass(@java.lang.Object@class)' -c 316bc132
      *
      * @param classN
      * @return
      */
     public static String invokeClass(Class classN) {
+        if (classN == null) {
+            return "";
+        }
+        return classN.getName();
+    }
+
+    /**
+     * 对于class类型的参数进行了增强处理
+     * ognl  -x  3  '@com.wangji92.arthas.plugin.demo.controller.StaticTest@invokeClass1(@com.wangji92.arthas.plugin.demo.controller.User@class)' -c 316bc132
+     * @param classN
+     * @return
+     */
+    public static String invokeClass1(Class<User> classN) {
         if (classN == null) {
             return "";
         }
