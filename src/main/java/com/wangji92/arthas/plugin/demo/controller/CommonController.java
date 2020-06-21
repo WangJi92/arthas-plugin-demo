@@ -29,6 +29,11 @@ public class CommonController {
     @Autowired
     private ApplicationContext applicationContext;
 
+    @Autowired
+    private StaticTest staticTest;
+
+    private String watchValue = "wangji";
+
     /**
      * tt 测试 or 通过ognl 调用spring context getBean 调用处理
      * ognl -x 3 '#springContext=@com.wangji92.arthas.plugin.demo.common.ApplicationContextProvider@context,#springContext.getBean("commonController").getRandomInteger()' -c e374b99
@@ -126,6 +131,7 @@ public class CommonController {
      * watch com.wangji92.arthas.plugin.demo.controller.StaticTest * '{params,returnObj,throwExp,@com.wangji92.arthas.plugin.demo.controller.StaticTest@INVOKE_STATIC_LONG}' -n 5 -x 3 '1==1'
      *
      * watch com.wangji92.arthas.plugin.demo.controller.CommonController * '{params,returnObj,throwExp,target.arthasTestService}' -n 5 -x 3 '1==1'
+     *
      * 2、触发一下这个类的某个方法的调用 eg: 比如这里调用这个 http://localhost:8080/watchField
      * 3、即可查看到具体的信息
      *
@@ -135,6 +141,18 @@ public class CommonController {
     @ResponseBody
     public String watchField() {
         return StaticTest.getInvokeStaticName();
+    }
+
+
+    /**
+     * 调用非静态的方法才可以在watch 的时候获取非静态的字段
+     * watch com.wangji92.arthas.plugin.demo.controller.StaticTest * '{params,returnObj,throwExp,target.filedValue}' -n 5 -x 3 'method.initMethod(),method.constructor!=null || !@java.lang.reflect.Modifier@isStatic(method.method.getModifiers())'
+     * @return
+     */
+    @RequestMapping("watchNoStaticField")
+    @ResponseBody
+    public String watchNoStaticField() {
+        return staticTest.getFieldValue();
     }
 
 }

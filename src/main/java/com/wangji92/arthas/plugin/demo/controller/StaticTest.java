@@ -1,5 +1,6 @@
 package com.wangji92.arthas.plugin.demo.controller;
 
+import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
 import java.util.Arrays;
@@ -11,6 +12,7 @@ import java.util.Map;
  * @author 汪小哥
  * @date 28-03-2020
  */
+@Component
 public class StaticTest {
 
     /**
@@ -34,7 +36,28 @@ public class StaticTest {
      */
     private static Double INVOKE_STATIC_DOUBLE = 111D;
 
+    /**
+     * 演示watch 获取值
+     * watch com.wangji92.arthas.plugin.demo.controller.StaticTest * '{params,returnObj,throwExp,@com.wangji92.arthas.plugin.demo.controller.StaticTest@INVOKE_STATIC_LONG}' -n 5 -x 3 '1==1'
+     */
     private static Long INVOKE_STATIC_LONG = 1211L;
+
+    /**
+     * 演示watch 获取值
+     * watch com.wangji92.arthas.plugin.demo.controller.StaticTest * '{params,returnObj,throwExp,target.filedValue}' -n 5 -x 3 '1==1'
+     *
+     */
+    private String filedValue = "wangji92";
+
+    /**
+     * 调用非静态的方法才可以在watch 的时候获取非静态的字段
+     *
+     * watch com.wangji92.arthas.plugin.demo.controller.StaticTest * '{params,returnObj,throwExp,target.filedValue}' -n 5 -x 3 'method.initMethod(),method.constructor!=null || !@java.lang.reflect.Modifier@isStatic(method.method.getModifiers())'
+     * @return
+     */
+    public  String getFieldValue(){
+       return this.filedValue;
+    }
 
     /**
      * 调用方法
