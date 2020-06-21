@@ -32,7 +32,7 @@ public class CommonController {
     /**
      * tt 测试 or 通过ognl 调用spring context getBean 调用处理
      * ognl -x 3 '#springContext=@com.wangji92.arthas.plugin.demo.common.ApplicationContextProvider@context,#springContext.getBean("commonController").getRandomInteger()' -c e374b99
-     *
+     * <p>
      * 记录时间隧道，重新触发一次
      * tt -t com.wangji92.arthas.plugin.demo.controller.CommonController getRandomInteger -n 5
      * tt -p -i 1000
@@ -49,9 +49,10 @@ public class CommonController {
     /**
      * use trace -E
      * trace -E com.wangji92.arthas.plugin.demo.controller.CommonController|com.wangji92.arthas.plugin.demo.service.ArthasTestService traceE|doTraceE -n 5
-     *
+     * <p>
      * ##包含jdk的调用
-     *trace -E com.wangji92.arthas.plugin.demo.controller.CommonController|com.wangji92.arthas.plugin.demo.service.ArthasTestService traceE|doTraceE -n 5 --skipJDKMethod false
+     * trace -E com.wangji92.arthas.plugin.demo.controller.CommonController|com.wangji92.arthas.plugin.demo.service.ArthasTestService traceE|doTraceE -n 5 --skipJDKMethod false
+     *
      * @param name
      * @return
      */
@@ -85,9 +86,10 @@ public class CommonController {
      * 目前只支持获取静态static spring context
      * 获取所有的环境变量 按照优先级排序
      * ognl -x 3 '#springContext=@com.wangji92.arthas.plugin.demo.common.ApplicationContextProvider@context,#allProperties={},#standardServletEnvironment=#propertySourceIterator=#springContext.getEnvironment(),#propertySourceIterator=#standardServletEnvironment.getPropertySources().iterator(),#propertySourceIterator.{#key=#this.getName(),#allProperties.add("                "),#allProperties.add("------------------------- name:"+#key),#this.getSource() instanceof java.util.Map ?#this.getSource().entrySet().iterator.{#key=#this.key,#allProperties.add(#key+"="+#standardServletEnvironment.getProperty(#key))}:#{}},#allProperties' -c e374b99
-     *
+     * <p>
      * 选中 custom.name 获取当前的变量的信息
      * ognl -x 3 '#springContext=@com.wangji92.arthas.plugin.demo.common.ApplicationContextProvider@context,#springContext.getEnvironment().getProperty("custom.name")' -c e374b99
+     *
      * @return
      */
     @RequestMapping("environmentPriority")
@@ -100,21 +102,39 @@ public class CommonController {
      * 复杂参数调用 场景
      * static spring context
      * ognl -x 3 '#user=new com.wangji92.arthas.plugin.demo.controller.User(),#user.setName("wangji"),#user.setAge(27L),#springContext=@com.wangji92.arthas.plugin.demo.common.ApplicationContextProvider@context,#springContext.getBean("commonController").complexParameterCall(#{"wangji":#user})' -c e374b99
-     *
+     * <p>
      * watch get spring context 备注 需要调用一次方法
      * watch -x 3 -n 1  org.springframework.web.servlet.DispatcherServlet doDispatch '#user=new com.wangji92.arthas.plugin.demo.controller.User(),#user.setName("wangji"),#user.setAge(27L),@org.springframework.web.context.support.WebApplicationContextUtils@getWebApplicationContext(params[0].getServletContext()).getBean("commonController").complexParameterCall(#{"wangji":#user})'
-     *
+     * <p>
      * tt get spring context ，only first get time index ok
      * tt -w '#user=new com.wangji92.arthas.plugin.demo.controller.User(),#user.setName("wangji"),#user.setAge(27L),target.getApplicationContext().getBean("commonController").complexParameterCall(#{"wangji":#user})' -x 3 -i 1000
+     *
      * @return
      */
     @RequestMapping("complexParameterCall")
     @ResponseBody
-    public String complexParameterCall(@RequestBody  Map<String, User> names) {
+    public String complexParameterCall(@RequestBody Map<String, User> names) {
         if (names == null) {
             return "EMPTY";
         }
         return names.toString();
+    }
+
+    /**
+     * 1、将光标放置在需要观察的值的字段上面
+     * 比如下面的这个获取静态字段的值,无论是静态字段还是实例字段都是可以支持的！
+     * watch com.wangji92.arthas.plugin.demo.controller.StaticTest * '{params,returnObj,throwExp,@com.wangji92.arthas.plugin.demo.controller.StaticTest@INVOKE_STATIC_LONG}' -n 5 -x 3 '1==1'
+     *
+     * watch com.wangji92.arthas.plugin.demo.controller.CommonController * '{params,returnObj,throwExp,target.arthasTestService}' -n 5 -x 3 '1==1'
+     * 2、触发一下这个类的某个方法的调用 eg: 比如这里调用这个 http://localhost:8080/watchField
+     * 3、即可查看到具体的信息
+     *
+     * @return
+     */
+    @RequestMapping("watchField")
+    @ResponseBody
+    public String watchField() {
+        return StaticTest.getInvokeStaticName();
     }
 
 }
