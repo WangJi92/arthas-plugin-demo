@@ -1,11 +1,9 @@
 package com.wangji92.arthas.plugin.demo.common.profile;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 import java.util.UUID;
 
@@ -22,25 +20,27 @@ public class HotCode {
 
     private static volatile int value;
 
-    private static List<Object> array = new ArrayList<>(20);
-
-    @Scheduled(initialDelay = 1000, fixedRate = 2000)
-    public void hotMethodScheduled() {
-        log.info("hotMethodScheduled begin");
-        HotCode.hotMethod1();
-        HotCode.hotMethod2();
-        HotCode.hotMethod3();
-        // HotCode.allocate();
-        log.info("hotMethodScheduled end");
+    public void hotMethodRun() {
+        while (true) {
+            //log.info("hotMethodScheduled begin");
+            HotCode.hotMethod1();
+            HotCode.hotMethod2();
+            HotCode.hotMethod3();
+            HotCode.allocate();
+            //log.info("hotMethodScheduled end");
+        }
     }
+
+    private static Object array;
 
     /**
-     * 生成 6万长度的数组
+     * 生成 大长度的数组
      */
     private static void allocate() {
-        int[] ints = new int[6 * 1000];
-        array.add(ints);
+        array = new int[6 * 100];
+        array = new Integer[6 * 100];
     }
+
 
     /**
      * 生成一个UUID
