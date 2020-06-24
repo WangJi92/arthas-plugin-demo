@@ -8,6 +8,16 @@ import java.util.Random;
 import java.util.UUID;
 
 /**
+ *
+ * ./profiler.sh -d 10 -e alloc -f output-alloc.svg -t 1786
+ * ./profiler.sh -d 10 -e cpu -f output-cpu.svg  --all-user 1786
+ * ./profiler.sh -d 10  -f output-cpu.svg  --all-user 1786
+ * ./profiler.sh -d 10 -e com.wangji92.arthas.plugin.demo.common.profile.HotCode.hotMethod1 -f output-method.svg  --all-user 1786
+ * ./profiler.sh -d 10   -f output-cpu.svg  --all-user 1786
+ * ./profiler.sh -d 10 -e itimer -f output-itimer.svg  --all-user 1786
+ * ./profiler.sh -d 10 -e wall -f output-wall.svg  -t 1786
+ * ./profiler.sh list  1786
+ * ./profiler.sh
  * 模拟热点代码
  * 参考文章 : https://www.jianshu.com/p/918e1dce61cd
  *
