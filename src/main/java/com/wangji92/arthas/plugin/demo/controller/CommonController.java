@@ -1,6 +1,7 @@
 package com.wangji92.arthas.plugin.demo.controller;
 
 import com.wangji92.arthas.plugin.demo.service.ArthasTestService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
@@ -21,6 +22,7 @@ import java.util.Random;
  */
 @Controller
 @RequestMapping("/")
+@Slf4j
 public class CommonController {
 
     @Autowired
@@ -129,9 +131,9 @@ public class CommonController {
      * 1、将光标放置在需要观察的值的字段上面
      * 比如下面的这个获取静态字段的值,无论是静态字段还是实例字段都是可以支持的！
      * watch com.wangji92.arthas.plugin.demo.controller.StaticTest * '{params,returnObj,throwExp,@com.wangji92.arthas.plugin.demo.controller.StaticTest@INVOKE_STATIC_LONG}' -n 5 -x 3 '1==1'
-     *
+     * <p>
      * watch com.wangji92.arthas.plugin.demo.controller.CommonController * '{params,returnObj,throwExp,target.arthasTestService}' -n 5 -x 3 '1==1'
-     *
+     * <p>
      * 2、触发一下这个类的某个方法的调用 eg: 比如这里调用这个 http://localhost:8080/watchField
      * 3、即可查看到具体的信息
      *
@@ -147,6 +149,7 @@ public class CommonController {
     /**
      * 调用非静态的方法才可以在watch 的时候获取非静态的字段
      * watch com.wangji92.arthas.plugin.demo.controller.StaticTest * '{params,returnObj,throwExp,target.filedValue}' -n 5 -x 3 'method.initMethod(),method.constructor!=null || !@java.lang.reflect.Modifier@isStatic(method.method.getModifiers())'
+     *
      * @return
      */
     @RequestMapping("watchNoStaticField")
@@ -154,5 +157,31 @@ public class CommonController {
     public String watchNoStaticField() {
         return staticTest.getFieldValue();
     }
+
+    @RequestMapping("AnonymousClass")
+    @ResponseBody
+    public String anonymousClass() {
+        Runnable x = new Runnable() {
+            @Override
+            public void run() {
+                log.info(this.getClass().getName());
+            }
+        };
+        x.run();
+        return "ok";
+    }
+
+    @RequestMapping("innerAnonymousClass")
+    @ResponseBody
+    public String innerAnonymousClass() {
+        OuterClass.InnerClass innerClass = new OuterClass().new InnerClass();
+        innerClass.anonymousClassRun();
+        innerClass.getInnerAge();
+        OuterClass.InnerClass.InnerInnerClass innerInnerClass = innerClass.new InnerInnerClass();
+        innerInnerClass.getInnerInnerAge();
+        innerInnerClass.anonymousInnerInnerClassRun();
+        return "ok";
+    }
+
 
 }
