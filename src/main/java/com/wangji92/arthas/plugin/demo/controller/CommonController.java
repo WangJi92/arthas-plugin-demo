@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Random;
 
@@ -35,6 +37,25 @@ public class CommonController {
     private StaticTest staticTest;
 
     private String watchValue = "wangji";
+
+    @RequestMapping("/userOgnlX")
+    @ResponseBody
+    public Object userOgnlX() {
+        User user = new User();
+        user.setName("汪小哥");
+        user.setAge(28L);
+
+        User userCopy = new User();
+        user.setName("汪小哥Copy");
+        user.setAge(28L);
+
+        List<Object> innerObject = new ArrayList<>();
+        innerObject.add(user);
+        innerObject.add(userCopy);
+        List<Object> outerList = new ArrayList<>();
+        outerList.add(innerObject);
+        return outerList;
+    }
 
     /**
      * tt 测试 or 通过ognl 调用spring context getBean 调用处理
