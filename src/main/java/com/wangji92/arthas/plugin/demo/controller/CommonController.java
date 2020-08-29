@@ -36,6 +36,8 @@ public class CommonController {
     @Autowired
     private StaticTest staticTest;
 
+    public static final String WATCH_STATIC_VALUE = "wangji";
+
     private String watchValue = "wangji";
 
     @RequestMapping("/userOgnlX")
