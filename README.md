@@ -1,4 +1,4 @@
-# 爱上Java诊断利器Arthas之Arthas idea plugin 的前世今生
+# Arthas idea plugin 体验demo
 
 ## 文章地址
 * csdn : https://wangji.blog.csdn.net/article/details/105187223
@@ -8,7 +8,6 @@
 ## 视频地址
 **本文视频介绍大约 1hour,最好结合视频+文档学习+实践** 
 
-* 优酷地址：https://v.youku.com/v_show/id_XNDYxMDUxMzYxNg==.html
 * 哔哩哔哩：https://www.bilibili.com/video/BV1K7411Q7mW/
 
 ## 插件
