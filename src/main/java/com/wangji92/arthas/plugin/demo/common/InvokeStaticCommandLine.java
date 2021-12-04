@@ -3,6 +3,7 @@ package com.wangji92.arthas.plugin.demo.common;
 import com.wangji92.arthas.plugin.demo.common.profile.HotCode;
 import com.wangji92.arthas.plugin.demo.controller.OuterClass;
 import com.wangji92.arthas.plugin.demo.controller.StaticTest;
+import com.wangji92.arthas.plugin.demo.controller.TestEnum;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
@@ -23,12 +24,13 @@ public class InvokeStaticCommandLine implements CommandLineRunner {
     public void run(String... args) throws Exception {
         //触发调用一下静态方法，不然没有使用，不会被加载
         log.info("test" + StaticTest.getInvokeStaticName());
-        new Thread(() -> hotCode.hotMethodRun(), "hotCode").start();
+        new Thread(hotCode::hotMethodRun, "hotCode").start();
 
         OuterClass.InnerClass innerClass = new OuterClass().new InnerClass();
         innerClass.anonymousClassRun();
         OuterClass.InnerClass.InnerInnerClass innerInnerClass = innerClass.new InnerInnerClass();
         innerInnerClass.anonymousInnerInnerClassRun();
+        log.info(TestEnum.COMMON.getCode());
 
         log.info("OuterClass.StaticInnerClass.getStaticInnerName() {}", OuterClass.StaticInnerClass.getStaticInnerName());
     }

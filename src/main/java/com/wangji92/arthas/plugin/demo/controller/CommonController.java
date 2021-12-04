@@ -206,5 +206,21 @@ public class CommonController {
         return "ok";
     }
 
+    /**
+     * vmtool -x 3 --action getInstances --className com.wangji92.arthas.plugin.demo.controller.CommonController  --express 'instances[0].testEnum(@com.wangji92.arthas.plugin.demo.controller.TestEnum@COMMON_1)'  -c 59a6bc53
+     * 先测试一下枚举
+     * 
+     * @param testEnum
+     * @return
+     */
+    @RequestMapping("testEnum")
+    @ResponseBody
+    public String testEnum(TestEnum testEnum) {
+        if (testEnum != null) {
+            return testEnum.getName();
+        }
+        return "ok";
+    }
+
 
 }
