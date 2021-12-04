@@ -28,17 +28,17 @@ import java.util.Random;
 public class CommonController {
 
     @Autowired
-    private ArthasTestService arthasTestService;
+    private ArthasTestService  arthasTestService;
 
     @Autowired
     private ApplicationContext applicationContext;
 
     @Autowired
-    private StaticTest staticTest;
+    private StaticTest         staticTest;
 
     public static final String WATCH_STATIC_VALUE = "wangji";
 
-    private String watchValue = "wangji";
+    private String             watchValue         = "wangji";
 
     @RequestMapping("/userOgnlX")
     @ResponseBody
@@ -60,12 +60,12 @@ public class CommonController {
     }
 
     /**
-     * tt 测试 or 通过ognl 调用spring context getBean 调用处理
-     * ognl -x 3 '#springContext=@com.wangji92.arthas.plugin.demo.common.ApplicationContextProvider@context,#springContext.getBean("commonController").getRandomInteger()' -c e374b99
+     * tt 测试 or 通过ognl 调用spring context getBean 调用处理 ognl -x 3
+     * '#springContext=@com.wangji92.arthas.plugin.demo.common.ApplicationContextProvider@context,#springContext.getBean("commonController").getRandomInteger()'
+     * -c e374b99
      * <p>
-     * 记录时间隧道，重新触发一次
-     * tt -t com.wangji92.arthas.plugin.demo.controller.CommonController getRandomInteger -n 5
-     * tt -p -i 1000
+     * 记录时间隧道，重新触发一次 tt -t com.wangji92.arthas.plugin.demo.controller.CommonController getRandomInteger -n 5 tt -p -i
+     * 1000
      *
      * @return
      */
@@ -77,11 +77,13 @@ public class CommonController {
     }
 
     /**
-     * use trace -E
-     * trace -E com.wangji92.arthas.plugin.demo.controller.CommonController|com.wangji92.arthas.plugin.demo.service.ArthasTestService traceE|doTraceE -n 5
+     * use trace -E trace -E
+     * com.wangji92.arthas.plugin.demo.controller.CommonController|com.wangji92.arthas.plugin.demo.service.ArthasTestService
+     * traceE|doTraceE -n 5
      * <p>
-     * ##包含jdk的调用
-     * trace -E com.wangji92.arthas.plugin.demo.controller.CommonController|com.wangji92.arthas.plugin.demo.service.ArthasTestService traceE|doTraceE -n 5 --skipJDKMethod false
+     * ##包含jdk的调用 trace -E
+     * com.wangji92.arthas.plugin.demo.controller.CommonController|com.wangji92.arthas.plugin.demo.service.ArthasTestService
+     * traceE|doTraceE -n 5 --skipJDKMethod false
      *
      * @param name
      * @return
@@ -98,9 +100,9 @@ public class CommonController {
     }
 
     /**
-     * 排查异常场景
-     * trace com.wangji92.arthas.plugin.demo.controller.CommonController traceException -n 5
-     * watch com.wangji92.arthas.plugin.demo.controller.CommonController traceException '{params,returnObj,throwExp}' -n 5 -x 3
+     * 排查异常场景 trace com.wangji92.arthas.plugin.demo.controller.CommonController traceException -n 5 watch
+     * com.wangji92.arthas.plugin.demo.controller.CommonController traceException '{params,returnObj,throwExp}' -n 5 -x
+     * 3
      *
      * @return
      */
@@ -112,13 +114,15 @@ public class CommonController {
     }
 
     /**
-     * 环境变量优先级问题排查
-     * 目前只支持获取静态static spring context
-     * 获取所有的环境变量 按照优先级排序
-     * ognl -x 3 '#springContext=@com.wangji92.arthas.plugin.demo.common.ApplicationContextProvider@context,#allProperties={},#standardServletEnvironment=#propertySourceIterator=#springContext.getEnvironment(),#propertySourceIterator=#standardServletEnvironment.getPropertySources().iterator(),#propertySourceIterator.{#key=#this.getName(),#allProperties.add("                "),#allProperties.add("------------------------- name:"+#key),#this.getSource() instanceof java.util.Map ?#this.getSource().entrySet().iterator.{#key=#this.key,#allProperties.add(#key+"="+#standardServletEnvironment.getProperty(#key))}:#{}},#allProperties' -c e374b99
+     * 环境变量优先级问题排查 目前只支持获取静态static spring context 获取所有的环境变量 按照优先级排序 ognl -x 3
+     * '#springContext=@com.wangji92.arthas.plugin.demo.common.ApplicationContextProvider@context,#allProperties={},#standardServletEnvironment=#propertySourceIterator=#springContext.getEnvironment(),#propertySourceIterator=#standardServletEnvironment.getPropertySources().iterator(),#propertySourceIterator.{#key=#this.getName(),#allProperties.add("
+     * "),#allProperties.add("------------------------- name:"+#key),#this.getSource() instanceof java.util.Map
+     * ?#this.getSource().entrySet().iterator.{#key=#this.key,#allProperties.add(#key+"="+#standardServletEnvironment.getProperty(#key))}:#{}},#allProperties'
+     * -c e374b99
      * <p>
-     * 选中 custom.name 获取当前的变量的信息
-     * ognl -x 3 '#springContext=@com.wangji92.arthas.plugin.demo.common.ApplicationContextProvider@context,#springContext.getEnvironment().getProperty("custom.name")' -c e374b99
+     * 选中 custom.name 获取当前的变量的信息 ognl -x 3
+     * '#springContext=@com.wangji92.arthas.plugin.demo.common.ApplicationContextProvider@context,#springContext.getEnvironment().getProperty("custom.name")'
+     * -c e374b99
      *
      * @return
      */
@@ -129,15 +133,17 @@ public class CommonController {
     }
 
     /**
-     * 复杂参数调用 场景
-     * static spring context
-     * ognl -x 3 '#user=new com.wangji92.arthas.plugin.demo.controller.User(),#user.setName("wangji"),#user.setAge(27L),#springContext=@com.wangji92.arthas.plugin.demo.common.ApplicationContextProvider@context,#springContext.getBean("commonController").complexParameterCall(#{"wangji":#user})' -c e374b99
+     * 复杂参数调用 场景 static spring context ognl -x 3 '#user=new
+     * com.wangji92.arthas.plugin.demo.controller.User(),#user.setName("wangji"),#user.setAge(27L),#springContext=@com.wangji92.arthas.plugin.demo.common.ApplicationContextProvider@context,#springContext.getBean("commonController").complexParameterCall(#{"wangji":#user})'
+     * -c e374b99
      * <p>
-     * watch get spring context 备注 需要调用一次方法
-     * watch -x 3 -n 1  org.springframework.web.servlet.DispatcherServlet doDispatch '#user=new com.wangji92.arthas.plugin.demo.controller.User(),#user.setName("wangji"),#user.setAge(27L),@org.springframework.web.context.support.WebApplicationContextUtils@getWebApplicationContext(params[0].getServletContext()).getBean("commonController").complexParameterCall(#{"wangji":#user})'
+     * watch get spring context 备注 需要调用一次方法 watch -x 3 -n 1 org.springframework.web.servlet.DispatcherServlet doDispatch
+     * '#user=new
+     * com.wangji92.arthas.plugin.demo.controller.User(),#user.setName("wangji"),#user.setAge(27L),@org.springframework.web.context.support.WebApplicationContextUtils@getWebApplicationContext(params[0].getServletContext()).getBean("commonController").complexParameterCall(#{"wangji":#user})'
      * <p>
-     * tt get spring context ，only first get time index ok
-     * tt -w '#user=new com.wangji92.arthas.plugin.demo.controller.User(),#user.setName("wangji"),#user.setAge(27L),target.getApplicationContext().getBean("commonController").complexParameterCall(#{"wangji":#user})' -x 3 -i 1000
+     * tt get spring context ，only first get time index ok tt -w '#user=new
+     * com.wangji92.arthas.plugin.demo.controller.User(),#user.setName("wangji"),#user.setAge(27L),target.getApplicationContext().getBean("commonController").complexParameterCall(#{"wangji":#user})'
+     * -x 3 -i 1000
      *
      * @return
      */
@@ -151,14 +157,15 @@ public class CommonController {
     }
 
     /**
-     * 1、将光标放置在需要观察的值的字段上面
-     * 比如下面的这个获取静态字段的值,无论是静态字段还是实例字段都是可以支持的！
-     * watch com.wangji92.arthas.plugin.demo.controller.StaticTest * '{params,returnObj,throwExp,@com.wangji92.arthas.plugin.demo.controller.StaticTest@INVOKE_STATIC_LONG}' -n 5 -x 3 '1==1'
+     * 1、将光标放置在需要观察的值的字段上面 比如下面的这个获取静态字段的值,无论是静态字段还是实例字段都是可以支持的！ watch
+     * com.wangji92.arthas.plugin.demo.controller.StaticTest *
+     * '{params,returnObj,throwExp,@com.wangji92.arthas.plugin.demo.controller.StaticTest@INVOKE_STATIC_LONG}' -n 5 -x 3
+     * '1==1'
      * <p>
-     * watch com.wangji92.arthas.plugin.demo.controller.CommonController * '{params,returnObj,throwExp,target.arthasTestService}' -n 5 -x 3 '1==1'
+     * watch com.wangji92.arthas.plugin.demo.controller.CommonController *
+     * '{params,returnObj,throwExp,target.arthasTestService}' -n 5 -x 3 '1==1'
      * <p>
-     * 2、触发一下这个类的某个方法的调用 eg: 比如这里调用这个 http://localhost:8080/watchField
-     * 3、即可查看到具体的信息
+     * 2、触发一下这个类的某个方法的调用 eg: 比如这里调用这个 http://localhost:8080/watchField 3、即可查看到具体的信息
      *
      * @return
      */
@@ -168,10 +175,10 @@ public class CommonController {
         return StaticTest.getInvokeStaticName();
     }
 
-
     /**
-     * 调用非静态的方法才可以在watch 的时候获取非静态的字段
-     * watch com.wangji92.arthas.plugin.demo.controller.StaticTest * '{params,returnObj,throwExp,target.filedValue}' -n 5 -x 3 'method.initMethod(),method.constructor!=null || !@java.lang.reflect.Modifier@isStatic(method.method.getModifiers())'
+     * 调用非静态的方法才可以在watch 的时候获取非静态的字段 watch com.wangji92.arthas.plugin.demo.controller.StaticTest *
+     * '{params,returnObj,throwExp,target.filedValue}' -n 5 -x 3 'method.initMethod(),method.constructor!=null ||
+     * !@java.lang.reflect.Modifier@isStatic(method.method.getModifiers())'
      *
      * @return
      */
@@ -185,6 +192,7 @@ public class CommonController {
     @ResponseBody
     public String anonymousClass() {
         Runnable x = new Runnable() {
+
             @Override
             public void run() {
                 log.info(this.getClass().getName());
@@ -207,7 +215,8 @@ public class CommonController {
     }
 
     /**
-     * vmtool -x 3 --action getInstances --className com.wangji92.arthas.plugin.demo.controller.CommonController  --express 'instances[0].testEnum(@com.wangji92.arthas.plugin.demo.controller.TestEnum@COMMON_1)'  -c 59a6bc53
+     * vmtool -x 3 --action getInstances --className com.wangji92.arthas.plugin.demo.controller.CommonController
+     * --express 'instances[0].testEnum(@com.wangji92.arthas.plugin.demo.controller.TestEnum@COMMON_1)' -c 59a6bc53
      * 先测试一下枚举
      * 
      * @param testEnum
@@ -222,5 +231,15 @@ public class CommonController {
         return "ok";
     }
 
+    /**
+     * check head
+     * @return
+     */
+    @RequestMapping("checkHead")
+    @ResponseBody
+    public String checkHead() {
+
+        return "ok";
+    }
 
 }
