@@ -3,8 +3,8 @@ package com.wangji92.arthas.plugin.demo.common.config;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.commons.lang.StringUtils;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import org.springframework.web.servlet.HandlerInterceptor;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
@@ -34,7 +34,7 @@ public class WebConfig implements WebMvcConfigurer {
                 }
 
                 String code = request.getHeader("code");
-                if (StringUtils.isBlank(code)) {
+                if (StringUtils.isEmpty(code)) {
                     return false;
                 }
                 if ("arthas".equals(code)) {
