@@ -6,10 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -39,6 +36,19 @@ public class CommonController {
     public static final String WATCH_STATIC_VALUE = "wangji";
 
     private String             watchValue         = "wangji";
+
+    /**
+     * https://github.com/alibaba/arthas/issues/71  fastjson 转换复杂对象进行调用
+     * vmtool -x 3 --action getInstances --className com.wangji92.arthas.plugin.demo.controller.CommonController  --express 'instances[0].userFastJson(@com.alibaba.fastjson.JSON@parseObject("{\"name\":\"name\",\"age\":18}",@com.wangji92.arthas.plugin.demo.controller.User@class))'  -c 888b915
+     * @param user
+     * @return
+     */
+    @PostMapping("/userFastJson")
+    @ResponseBody
+    public Object userFastJson(@RequestBody User user) {
+
+        return user;
+    }
 
     @RequestMapping("/userOgnlX")
     @ResponseBody
