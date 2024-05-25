@@ -6,12 +6,14 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.StringUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 /**
  * arthas 体验demo
@@ -39,35 +41,160 @@ public class CommonController {
 
     /**
      * https://github.com/alibaba/arthas/issues/71  fastjson 转换复杂对象进行调用
-     * vmtool -x 3 --action getInstances --className com.wangji92.arthas.plugin.demo.controller.CommonController  --express 'instances[0].userFastJson(@com.alibaba.fastjson.JSON@parseObject("{\"name\":\"name\",\"age\":18}",@com.wangji92.arthas.plugin.demo.controller.User@class))'  -c 888b915
-     * @param user
+     * https://github.com/WangJi92/arthas-idea-plugin/issues/127  复杂类型参数的支持
+     * @param param
+     * 处理基本类型参数、没有泛型
+     * {@code
+     *  vmtool -x 3 --action getInstances --className com.wangji92.arthas.plugin.demo.controller.CommonController  --express 'instances[0].testParam(@com.alibaba.fastjson.JSON@parseObject("{\"name\":\" \",\"age\":0}",@com.wangji92.arthas.plugin.demo.controller.User@class))'  -c 6f54e410
+     * }
      * @return
      */
-    @PostMapping("/userFastJson")
-    @ResponseBody
-    public Object userFastJson(@RequestBody User user) {
-
-        return user;
+    public Object testParam(User param) {
+        return param;
     }
 
-    @RequestMapping("/userOgnlX")
-    @ResponseBody
-    public Object userOgnlX() {
-        User user = new User();
-        user.setName("汪小哥");
-        user.setAge(28L);
-
-        User userCopy = new User();
-        user.setName("汪小哥Copy");
-        user.setAge(28L);
-
-        List<Object> innerObject = new ArrayList<>();
-        innerObject.add(user);
-        innerObject.add(userCopy);
-        List<Object> outerList = new ArrayList<>();
-        outerList.add(innerObject);
-        return outerList;
+    /**
+     * 处理基本集合 Map 参数
+     * {@code
+     *     vmtool -x 3 --action getInstances --className com.wangji92.arthas.plugin.demo.controller.CommonController  --express 'instances[0].testParam((#{"_AR_": @com.alibaba.fastjson.JSON@parseObject("{\"name\":\" \",\"age\":0}",@com.wangji92.arthas.plugin.demo.controller.User@class)}))'  -c 6f54e410
+     * }
+     * @param param
+     * @return
+     */
+    public Object testParam(Map<String,User> param) {
+        return param;
     }
+
+    /**
+     * 处理基本集合List 参数
+     * {@code
+     *     vmtool -x 3 --action getInstances --className com.wangji92.arthas.plugin.demo.controller.CommonController  --express 'instances[0].testParam({@com.alibaba.fastjson.JSON@parseObject("{\"name\":\" \",\"age\":0}",@com.wangji92.arthas.plugin.demo.controller.User@class)})'  -c 6f54e410
+     * }
+     * @param param
+     * @return
+     */
+    public Object testParam(List<User> param) {
+        return param;
+    }
+
+    /**
+     * 处理基本集合Set参数
+     * {@code
+     *      vmtool -x 3 --action getInstances --className com.wangji92.arthas.plugin.demo.controller.CommonController  --express 'instances[0].testParam((#set=new java.util.HashSet(),#set.add(@com.alibaba.fastjson.JSON@parseObject("{\"name\":\" \",\"age\":0}",@com.wangji92.arthas.plugin.demo.controller.User@class)),#set))'  -c 6f54e410
+     * }
+     * @param param
+     * @return
+     */
+    public Object testParam(Set<User> param) {
+        return param;
+    }
+
+    /**
+     * 处理特殊JDK Map
+     * {@code
+     *     vmtool -x 3 --action getInstances --className com.wangji92.arthas.plugin.demo.controller.CommonController  --express 'instances[0].testParam((#@java.util.concurrent.ConcurrentHashMap@{"_AR_": @com.alibaba.fastjson.JSON@parseObject("{\"name\":\" \",\"age\":0}",@com.wangji92.arthas.plugin.demo.controller.User@class)}))'  -c 6f54e410
+     * }
+     * @param param
+     * @return
+     */
+    public Object testParam(ConcurrentHashMap<String,User> param) {
+        return param;
+    }
+
+    /**
+     * 出来特殊JDK List
+     * {@code
+     *     vmtool -x 3 --action getInstances --className com.wangji92.arthas.plugin.demo.controller.CommonController  --express 'instances[0].testParam((#list=new java.util.concurrent.CopyOnWriteArrayList(),#list.add(@com.alibaba.fastjson.JSON@parseObject("{\"name\":\" \",\"age\":0}",@com.wangji92.arthas.plugin.demo.controller.User@class)),#list))'  -c 6f54e410
+     * }
+     * @param param
+     * @return
+     */
+    public Object testParam(CopyOnWriteArrayList<User> param) {
+        return param;
+    }
+
+    /**
+     * 处理特殊JDK 参数
+     * {@code
+     *     vmtool -x 3 --action getInstances --className com.wangji92.arthas.plugin.demo.controller.CommonController  --express 'instances[0].testParam(@com.alibaba.fastjson.JSON@parseObject("\"2024-05-26 00:31:23 +0800\"",@java.util.Calendar@class))'  -c 6f54e410
+     * }
+     * @param param
+     * @return
+     */
+    public Object testParam(Calendar param) {
+        return param;
+    }
+
+
+    /**
+     * 处理内部类数组
+     *{@code
+     *     vmtool -x 3 --action getInstances --className com.wangji92.arthas.plugin.demo.controller.CommonController  --express 'instances[0].testParam((new com.wangji92.arthas.plugin.demo.controller.OuterClass$InnerClass[]{@com.alibaba.fastjson.JSON@parseObject("{\"innerName\":\" \",\"innerAge\":0}",@com.wangji92.arthas.plugin.demo.controller.OuterClass$InnerClass@class)}))'  -c 6f54e410
+     *}
+     * @param param
+     * @return
+     */
+    public Object testParam(OuterClass.InnerClass[] param) {
+        return param;
+    }
+
+    /**
+     * 处理 CLazz 类型内部类
+     * {@code
+     *     vmtool -x 3 --action getInstances --className com.wangji92.arthas.plugin.demo.controller.CommonController  --express 'instances[0].testParam((@com.wangji92.arthas.plugin.demo.controller.OuterClass$InnerClass@class))'  -c 6f54e410
+     * }
+     * @param param
+     * @return
+     */
+    public Object testParam(Class<OuterClass.InnerClass> param) {
+        return param;
+    }
+
+
+    /**
+     * 处理内部类枚举参数
+     * {@code
+     *      vmtool -x 3 --action getInstances --className com.wangji92.arthas.plugin.demo.controller.CommonController  --express 'instances[0].testParam(@com.wangji92.arthas.plugin.demo.controller.OuterClass$Type@TEST)'  -c 6f54e410
+     * }
+     * @param param
+     * @return
+     */
+    public Object testParam(OuterClass.Type param) {
+        return param;
+    }
+
+
+    /**
+     * 处理基本数组
+     * {@code
+     *     vmtool -x 3 --action getInstances --className com.wangji92.arthas.plugin.demo.controller.CommonController  --express 'instances[0].testParam((new java.lang.Integer[]{0}))'  -c 6f54e410
+     * }
+     * @param param
+     * @return
+     */
+    public Object testParam(Integer[] param) {
+        return param;
+    }
+
+
+    /**
+     *  处理这种泛型复杂参数 TestGeneratesClazz<String,Map<String,User>> test
+     *  1、ognl 本身不支持泛型参数
+     *  2、通过Json 构建外层对象 TestGeneratesClazz
+     *  3、获取TestGeneratesClazz所有泛型参数
+     *  4、遍历TestGeneratesClazz 所有字段 包含了泛型参数 且非基本类型，通过判断是否有set方法进行赋值 同理赋值使用json 构造
+     *  5、构建脚本 差异化解决无法处理泛型的问题..
+     * {@code 
+     *     vmtool -x 3 --action getInstances --className com.wangji92.arthas.plugin.demo.controller.CommonController  --express 'instances[0].testParam((#p=@com.alibaba.fastjson.JSON@parseObject("{\"user2\":{\"name\":\" \",\"age\":0},\"integer\":0,\"st\":\" \",\"user\":\" \",\"test\":{\"_key_\":{\"name\":\" \",\"age\":0}}}",@com.wangji92.arthas.plugin.demo.controller.TestGeneratesClazz@class),(#p.setUser(@com.alibaba.fastjson.JSON@parseObject("{\"user2\":{\"name\":\" \",\"age\":0},\"integer\":0,\"st\":\" \",\"user\":\" \",\"test\":{\"_key_\":{\"name\":\" \",\"age\":0}}}",@com.wangji92.arthas.plugin.demo.controller.TestGeneratesClazz@class))),(#p.setTest(@com.alibaba.fastjson.JSON@parseObject("{\"user2\":{\"name\":\" \",\"age\":0},\"integer\":0,\"st\":\" \",\"user\":\" \",\"test\":{\"_key_\":{\"name\":\" \",\"age\":0}}}",@com.wangji92.arthas.plugin.demo.controller.TestGeneratesClazz@class))),#p))'  -c 6f54e410
+     * }
+     * @param param
+     * @return
+     */
+    public Object testParam(TestGeneratesClazz<String,Map<String,User>> param) {
+        return param;
+    }
+
+
 
     /**
      * tt 测试 or 通过ognl 调用spring context getBean 调用处理 ognl -x 3
@@ -215,7 +342,7 @@ public class CommonController {
     @RequestMapping("innerAnonymousClass")
     @ResponseBody
     public String innerAnonymousClass() {
-        OuterClass.InnerClass innerClass = new OuterClass().new InnerClass();
+        OuterClass.InnerClass innerClass =  new OuterClass.InnerClass();
         innerClass.anonymousClassRun();
         innerClass.getInnerAge();
         OuterClass.InnerClass.InnerInnerClass innerInnerClass = innerClass.new InnerInnerClass();

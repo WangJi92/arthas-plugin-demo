@@ -27,7 +27,7 @@ public class InvokeStaticCommandLine implements CommandLineRunner {
         log.info("test" + StaticTest.getInvokeStaticName());
         new Thread(hotCode::hotMethodRun, "hotCode").start();
 
-        OuterClass.InnerClass innerClass = new OuterClass().new InnerClass();
+        OuterClass.InnerClass innerClass =  new OuterClass.InnerClass();
         innerClass.anonymousClassRun();
         OuterClass.InnerClass.InnerInnerClass innerInnerClass = innerClass.new InnerInnerClass();
         innerInnerClass.anonymousInnerInnerClassRun();

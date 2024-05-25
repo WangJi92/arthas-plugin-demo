@@ -13,7 +13,11 @@ public class OuterClass {
 
     private int outerAge;
 
-    public class InnerClass {
+    public enum Type{
+        TEST
+    }
+
+    public  static class InnerClass {
         private String innerName;
         private int innerAge;
 
@@ -73,6 +77,10 @@ public class OuterClass {
             x.run();
         }
 
+    }
+
+    public void main(String[] args) {
+        InnerClass innerClass = new InnerClass();
     }
 
 
