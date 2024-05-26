@@ -78,6 +78,22 @@ public class CommonController {
     }
 
     /**
+     * 泛型内部有通配符
+     * {@code
+     *     vmtool -x 3 --action getInstances --className com.wangji92.arthas.plugin.demo.controller.CommonController  --express 'instances[0].testParam2({@com.alibaba.fastjson.JSON@parseObject("{\"name\":\" \",\"age\":0}",@com.wangji92.arthas.plugin.demo.controller.User@class)})'  -c c212d8b
+     * }
+     * @param param
+     * @return
+     */
+    public Object testParam2(List<? extends User> param) {
+        return param;
+    }
+
+    public Object testParam2(Map<String,? extends User> param) {
+        return param;
+    }
+
+    /**
      * 处理基本集合Set参数
      * {@code
      *      vmtool -x 3 --action getInstances --className com.wangji92.arthas.plugin.demo.controller.CommonController  --express 'instances[0].testParam((#set=new java.util.HashSet(),#set.add(@com.alibaba.fastjson.JSON@parseObject("{\"name\":\" \",\"age\":0}",@com.wangji92.arthas.plugin.demo.controller.User@class)),#set))'  -c 6f54e410
