@@ -1,5 +1,6 @@
 package com.wangji92.arthas.plugin.demo.controller;
 
+import lombok.Data;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -17,6 +18,7 @@ public class OuterClass {
         TEST
     }
 
+    @Data
     public  static class InnerClass {
         private String innerName;
         private int innerAge;
@@ -35,7 +37,7 @@ public class OuterClass {
         public int getInnerAge() {
             return innerAge;
         }
-
+        @Data
         public class InnerInnerClass {
             private String innerInnerName;
             private int innerInnerAge;
