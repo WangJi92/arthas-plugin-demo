@@ -11,9 +11,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.time.MonthDay;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicLong;
+import java.util.regex.Pattern;
 
 /**
  * arthas 体验demo
@@ -25,6 +28,9 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @RequestMapping("/")
 @Slf4j
 public class CommonController {
+
+    public CommonController() {
+    }
 
     @Autowired
     private ArthasTestService  arthasTestService;
@@ -393,6 +399,21 @@ public class CommonController {
     public String checkHead() {
 
         return "ok";
+    }
+
+    public Object testParam(MonthDay param){
+        return  param;
+    }
+
+    public Object testParam2(Pattern param){
+        return  param;
+    }
+
+    public Object testParam3(Date param){
+        return  param;
+    }
+    public Object testParam3(AtomicLong param){
+        return  param;
     }
 
 
